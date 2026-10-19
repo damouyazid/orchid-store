@@ -139,15 +139,48 @@
       }
 
       function checkOrder(e) {
-        e.preventDefault();
-        var phone = document.getElementById("phone").value;
-        if (phone.length !== 10) {
-          alert("خطأ: يجب أن يتكون رقم الهاتف من 10 أرقام بالضبط!");
-          return;
-        }
-        alert("تم إرسال طلبك بنجاح!");
-      }
-    </script>
+  e.preventDefault();
+  
+  var phone = document.getElementById("phone").value;
+  if (phone.length !== 10) {
+    alert("خطأ: يجب أن يتكون رقم الهاتف من 10 أرقام بالضبط!");
+    return;
+  }
 
-  </body>
-</html>
+  var BOT_TOKEN = '8788549941:AAHjFJA34xvaZaPYK5lN5DYexZdGDAPKgQU';
+  var CHAT_ID = '5268529854';
+
+  var name = document.getElementById("fullname") ? document.getElementById("fullname").value : "غير محدد";
+  var state = document.getElementById("state") ? document.getElementById("state").value : "غير محدد";
+  var deliveryType = document.getElementById("delivery_type") ? document.getElementById("delivery_type").value : "home";
+  var total = document.getElementById("total-price") ? document.getElementById("total-price").innerText : "3500";
+
+  var message = "📦 *طلب جديد من متجر Orchid*\n\n" +
+                "👤 *الاسم:* " + name + "\n" +
+                "📞 *الهاتف:* " + phone + "\n" +
+                "📍 *الولاية:* " + state + "\n" +
+                "🚚 *نوع التوصيل:* " + (deliveryType === 'home' ? 'للمنزل' : 'للمكتب') + "\n" +
+                "💰 *المبلغ الإجمالي:* " + total + " دج";
+
+  fetch('https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      text: message,
+      parse_mode: 'Markdown'
+    })
+  })
+  .then(function(response) { return response.json(); })
+  .then(function(data) {
+    if (data.ok) {
+      alert("تم إرسال طلبك بنجاح! سنتصل بك قريباً لتأكيد الطلب.");
+    } else {
+      alert("حدث خطأ في الإرسال: " + data.description);
+    }
+  })
+  .catch(function(error) {
+    alert("تعذر الاتصال بالسيرفر، يرجى المحاولة لاحقاً.");
+  });
+      }
+      
