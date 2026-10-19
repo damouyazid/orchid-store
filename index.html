@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8">
+    <title>متجري الإلكتروني</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 20px;
+        text-align: center;
+      }
+      .product-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        max-width: 400px;
+        margin: auto;
+      }
+      button.order-btn {
+        background-color: #27ae60;
+        color: white;
+        padding: 12px 25px;
+        font-size: 18px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 15px;
+        width: 100%;
+      }
+      #order-form-container {
+        display: none;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        max-width: 400px;
+        margin: 20px auto;
+        text-align: right;
+      }
+      input, select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .price-summary {
+        background-color: #eef9f2;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- بطاقة المنتج -->
+    <div class="product-card">
+      <h1>متجر الهواتف والإكسسوارات</h1>
+      <h2>سماعات لاسلكية احترافية</h2>
+      <p>سماعات بجودة صوت عالية وعزل ممتاز للضوضاء.</p>
+      <p><strong>السعر:</strong> 3500 دج</p>
+      
+      <!-- زر أطلب الآن -->
+      <button class="order-btn" onclick="showForm()">أطلب الآن</button>
+    </div>
+
+    <!-- استمارة الطلب السريع -->
+    <div id="order-form-container">
+      <h3>استمارة الطلب السريع</h3>
+      <form onsubmit="checkOrder(event)">
+        <label for="fullname">الاسم واللقب:</label>
+        <input type="text" id="fullname" placeholder="أدخل اسمك الكامل" required>
+
+        <!-- خانة رقم الهاتف: 10 أرقام فقط -->
+        <label for="phone">رقم الهاتف (10 أرقام بدون مسافات):</label>
+        <input 
+          type="tel" 
+          id="phone" 
+          placeholder="06XXXXXXXX" 
+          pattern="[0-9]{10}" 
+          maxlength="10" 
+          title="يرجى كتابة 10 أرقام فقط بدون مسافات" 
+          required>
+
+        <label for="wilaya">الولاية:</label>
+        <select id="wilaya" required>
+          <option value="">اختر الولاية...</option>
+          <option value="02">02 - الشلف</option>
+          <option value="16">16 - الجزائر العاصمة</option>
+          <option value="31">31 - وهران</option>
+        </select>
+
+        <label for="commune">البلدية:</label>
+        <input type="text" id="commune" placeholder="أدخل اسم البلدية" required>
+
+        <label for="company">شركة التوصيل:</label>
+        <select id="company">
+          <option value="zr">ZR Express</option>
+          <option value="yalidine">Yalidine Express</option>
+          <option value="kazitour">Kazi Tour</option>
+        </select>
+
+        <label for="delivery_type">نوع التوصيل:</label>
+        <select id="delivery_type" onchange="updateTotal()">
+          <option value="desk">توصيل إلى المكتب (Stop Desk) - 400 دج</option>
+          <option value="home">توصيل إلى المنزل (A domicile) - 700 دج</option>
+        </select>
+
+        <div class="price-summary">
+          <p><strong>سعر المنتج:</strong> 3500 دج</p>
+          <p><strong>سعر التوصيل:</strong> <span id="shipping-price">400</span> دج</p>
+          <h4>المجموع الكلي: <span id="total-price" style="color: #27ae60;">3900</span> دج</h4>
+        </div>
+
+        <button type="submit" class="order-btn" style="background-color: #2980b9;">تأكيد الطلب الآن</button>
+      </form>
+    </div>
+
+    <!-- كود JavaScript الخاص بالوظائف -->
+    <script>
+      function showForm() {
+        var form = document.getElementById("order-form-container");
+        form.style.display = "block";
+        form.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      function updateTotal() {
+        var deliveryType = document.getElementById("delivery_type").value;
+        var shippingPrice = (deliveryType === "home") ? 700 : 400;
+        var total = 3500 + shippingPrice;
+
+        document.getElementById("shipping-price").innerText = shippingPrice;
+        document.getElementById("total-price").innerText = total;
+      }
+
+      function checkOrder(e) {
+        e.preventDefault();
+        var phone = document.getElementById("phone").value;
+        if (phone.length !== 10) {
+          alert("خطأ: يجب أن يتكون رقم الهاتف من 10 أرقام بالضبط!");
+          return;
+        }
+        alert("تم إرسال طلبك بنجاح!");
+      }
+    </script>
+
+  </body>
+</html>
